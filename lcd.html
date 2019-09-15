@@ -1,0 +1,155 @@
+<style>	
+
+	body{
+		text-align: center;
+	}
+
+	#geral{
+		width: 1000;
+		/*transform: scale(1.5);*/
+		margin: auto;
+	}
+
+	.bloco{
+		background-color: #555;
+		width: 62.5;
+		height: 100;
+		float: left;
+		box-shadow: 0px 0px 2px #999;
+	}
+
+	.quadrado{
+		width: 12.5;
+		height: 12.5;
+		background-color: white;
+		float: left;
+		box-shadow: 0px 0px 1px #bbb;
+		
+	}
+
+	.quadrado:hover{
+		/*background-color: red;*/
+		box-shadow: 0px 0px 10px black;
+	}
+
+	.black{background-color: black;}
+
+	textarea{
+		width: 100%;
+		height: 50%;
+		margin-top: 10;
+	}
+</style>
+
+<div id="geral"></div>
+<br><br><br>
+<textarea id="txarea" spellcheck="false"></textarea>
+
+<script>
+	
+	drag = false
+	color = 'white'
+	
+	window.onmouseup=()=>{ drag=false;return false }
+
+	for(i=0;i<32;i++){ geral.innerHTML += "<div id='b"+i+"' class='bloco'></div>" }
+
+		bloco = document.querySelectorAll(".bloco")
+
+	//estrutura para criar os bloquinhos internos
+
+	function put(n){
+		div = document.createElement("div")
+		for(i=0;i<5;i++){
+			for(j=0;j<8;j++){
+				div.innerHTML+="<div class='quadrado white'></div>";
+			}
+		}
+		geral.children[n].appendChild(div)
+
+		quadrado = document.querySelectorAll(".quadrado")
+	}
+
+	//cria bloquinhos
+
+	for(k=0;k<32;k++){ put(k) }
+
+
+	//muda o estado do quadrado
+function change(color,div){
+	console.log(color)
+
+	if(drag && color == 'white'){
+		div.classList.add('black')
+		div.classList.remove('white')
+	}
+
+	if(drag && color == 'black'){
+		div.classList.add('white')
+		div.classList.remove('black')
+	}
+}
+
+
+	//função para desenhar
+	for(i=0;i<quadrado.length;i++){
+		quadrado[i].onmousedown=function(e){ 
+			drag = true
+			color = !this.classList.contains('white') ? 'black' : 'white' 
+			change(color,this)
+			return false;
+		}
+
+		quadrado[i].onmouseover = function(e){ 
+			change(color,this)
+			toText()
+		}
+
+		quadrado[i].onclick = e=>{
+			change(color,this)
+			toText()
+		}
+
+
+	}
+
+	
+
+	function lista(div,nome){
+		el = []
+		b = 0 
+		for(i=0;i<8;i++){
+			for(j=0;j<5;j++){
+				valor = (i*5+j)
+				if(div.children[valor].classList.contains('black')){
+					el.push(1)
+					b = 1
+				}
+				else{
+					el.push(0)
+				}
+			}
+		}
+
+		if(b==1){
+			el = el.join("")
+			return "\nbyte "+nome+"[8] = {\nB"+el.match(/\d{5}/g).join(",\nB")+",\n};\n"
+		}else{
+			return ""
+		}
+	}
+
+	function toText(){
+		a = 1
+		txarea.innerHTML=""
+		for(z=0;z<bloco.length;z++){
+			div = bloco[z].children[0]
+			console.log(div)
+			txarea.innerHTML += lista(div,'bloco'+(a++))
+		}
+	}
+
+
+
+
+</script>
