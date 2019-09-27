@@ -133,7 +133,7 @@ function change(color,div){
 
 		if(b==1){
 			el = el.join("")
-			return "\nbyte "+nome+"[8] = {\nB"+el.match(/\d{5}/g).join(",\nB")+",\n};\n"
+			return "\nbyte "+nome+"[8] = {\nB"+el.match(/\d{5}/g).join(",\nB")+"\n};\n"
 		}else{
 			return ""
 		}
